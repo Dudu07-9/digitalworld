@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DIGITAL WORLD | INFO DUDU</title>
+    <title>INFO DUDU | CYBERSPACE MARKET</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
@@ -11,26 +11,11 @@
         
         :root {
             --bg-body: #000;
-            --bg-card: rgba(10, 10, 10, 0.95);
-            --bg-modal: #09090b;
+            --bg-card: rgba(10, 10, 10, 0.98);
             --text-main: #fff;
-            --text-sec: #71717a;
             --neon: #0ff;
-            --neon-glow: 0 0 15px rgba(0, 255, 255, 0.7), 0 0 30px rgba(0, 255, 255, 0.4);
-            --border: rgba(0, 255, 255, 0.15);
-            --sidebar-bg: rgba(0, 5, 5, 0.95);
-        }
-
-        .light-mode {
-            --bg-body: #f4f4f5;
-            --bg-card: rgba(255, 255, 255, 0.95);
-            --bg-modal: #ffffff;
-            --text-main: #09090b;
-            --text-sec: #52525b;
-            --neon: #0891b2;
-            --neon-glow: 0 0 10px rgba(8, 145, 178, 0.3);
-            --border: rgba(8, 145, 178, 0.2);
-            --sidebar-bg: rgba(255, 255, 255, 0.98);
+            --neon-pink: #f0f;
+            --border: rgba(0, 255, 255, 0.1);
         }
 
         body { 
@@ -38,130 +23,186 @@
             color: var(--text-main); 
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
-            transition: background-color 0.5s ease;
         }
+
+        /* --- EFEITO SCANNER GERAL --- */
+        body::before {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 3px;
+            background: rgba(0, 255, 255, 0.5);
+            box-shadow: 0 0 20px var(--neon);
+            z-index: 9999;
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
 
         .font-titan { font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: -0.05em; }
 
+        /* --- PRELOADER MATRIX --- */
         #preloader { 
             position: fixed; inset: 0; background: #000; z-index: 10000; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            transition: all 0.8s cubic-bezier(1, 0, 0, 1);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
             overflow: hidden;
         }
+        #preloader-canvas { position: absolute; inset: 0; opacity: 0.2; pointer-events: none; }
 
-        #preloader::after {
-            content: ""; position: absolute; inset: 0;
-            background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 255, 0.03) 50%);
-            background-size: 100% 4px; z-index: 5; pointer-events: none;
+        .cyber-loader {
+            width: 140px; height: 140px;
+            border: 2px solid var(--neon);
+            border-radius: 50%;
+            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.3);
+            z-index: 10;
+        }
+        .loader-ring {
+            position: absolute; width: 100%; height: 100%;
+            border: 4px solid transparent; border-top-color: var(--neon);
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .loader-logs {
+            margin-top: 30px; font-family: 'monospace'; font-size: 10px;
+            color: var(--neon); text-transform: uppercase; letter-spacing: 2px;
+            text-align: center; height: 20px; z-index: 10;
         }
 
-        .loader-content {
-            position: relative; display: flex; flex-direction: column; align-items: center; z-index: 10;
+        /* =========================================
+           --- NOVO EFEITO "CYBER SCAN" EM DIGITAL WORLD ---
+           ========================================= */
+        .glitch-wrapper { 
+            position: relative; 
+            padding-left: 20px;
+            border-left: 4px solid var(--neon);
         }
 
-        .hex-loader {
-            position: relative; width: 100px; height: 100px; background: var(--neon);
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-            display: flex; align-items: center; justify-content: center;
-            animation: hex-rotate 4s infinite linear;
-            box-shadow: var(--neon-glow);
+        .cyber-scan-title {
+            position: relative;
+            color: #fff;
+            text-transform: uppercase;
+            display: block;
+            /* Brilho de fundo */
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
-        .hex-inner {
-            width: 92px; height: 92px; background: #000;
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--neon); font-family: 'Orbitron', sans-serif;
-            font-weight: 900; font-size: 2.5rem; text-shadow: 0 0 15px var(--neon);
+        /* Camadas de Glitch */
+        .cyber-scan-title::before,
+        .cyber-scan-title::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: black; /* Cobre o texto original para o efeito de corte */
         }
 
-        @keyframes hex-rotate {
-            0% { transform: scale(1) rotate(0deg); filter: hue-rotate(0deg); }
-            50% { transform: scale(1.1) rotate(180deg); filter: hue-rotate(90deg); }
-            100% { transform: scale(1) rotate(360deg); filter: hue-rotate(0deg); }
+        /* Camada Rosa - Corte Superior */
+        .cyber-scan-title::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--neon-pink);
+            clip-path: inset(10% 0 70% 0);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
         }
 
-        .system-log {
-            margin-top: 30px; font-family: 'monospace'; font-size: 10px; color: var(--neon);
-            text-transform: uppercase; letter-spacing: 2px; height: 20px; opacity: 0.8;
+        /* Camada Ciano - Corte Inferior */
+        .cyber-scan-title::after {
+            left: -2px;
+            text-shadow: 2px 0 var(--neon);
+            clip-path: inset(70% 0 10% 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
         }
 
-        .progress-bar-wrap {
-            width: 200px; height: 2px; background: rgba(0, 255, 255, 0.1);
-            margin-top: 15px; position: relative; border: 1px solid rgba(0, 255, 255, 0.1);
+        /* Linha de Varredura (Scanner) que passa pelo texto */
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: var(--neon);
+            left: 0;
+            z-index: 10;
+            box-shadow: 0 0 15px var(--neon);
+            opacity: 0.7;
+            pointer-events: none;
+            animation: scan-move 2.5s infinite linear;
         }
 
-        .progress-bar-fill {
-            height: 100%; width: 0%; background: var(--neon);
-            box-shadow: 0 0 15px var(--neon); transition: width 0.2s ease;
+        @keyframes glitch-anim-1 {
+            0% { clip-path: inset(20% 0 50% 0); transform: translate(-5px); }
+            20% { clip-path: inset(80% 0 1% 0); transform: translate(5px); }
+            40% { clip-path: inset(40% 0 40% 0); transform: translate(-2px); }
+            60% { clip-path: inset(10% 0 80% 0); transform: translate(2px); }
+            80% { clip-path: inset(50% 0 20% 0); transform: translate(-5px); }
+            100% { clip-path: inset(20% 0 50% 0); transform: translate(0); }
         }
 
-        .neon-title-wrapper { display: flex; flex-direction: column; align-items: flex-start; }
-        .neon-text { font-family: 'Orbitron', sans-serif; font-weight: 900; text-transform: uppercase; line-height: 0.85; letter-spacing: -0.05em; }
-        .neon-text.mundo { font-size: clamp(3.5rem, 12vw, 7rem); color: #fff; text-shadow: 0 0 7px #fff, 0 0 21px var(--neon), 0 0 42px var(--neon); animation: flickerMundo 5s infinite alternate; }
-        .neon-text.digital { font-size: clamp(4rem, 15vw, 9rem); color: transparent; -webkit-text-stroke: 2px var(--neon); filter: drop-shadow(0 0 10px var(--neon)); animation: flickerDigital 3s infinite alternate; margin-top: -5px; }
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(10% 0 80% 0); transform: translate(5px); }
+            25% { clip-path: inset(50% 0 20% 0); transform: translate(-5px); }
+            50% { clip-path: inset(20% 0 50% 0); transform: translate(2px); }
+            75% { clip-path: inset(80% 0 5% 0); transform: translate(-2px); }
+            100% { clip-path: inset(10% 0 80% 0); transform: translate(0); }
+        }
 
-        @keyframes flickerMundo { 0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 7px #fff, 0 0 21px var(--neon), 0 0 42px var(--neon); color: #fff; } 20%, 24%, 55% { text-shadow: none; color: rgba(255, 255, 255, 0.2); } }
-        @keyframes flickerDigital { 0%, 11%, 15%, 49%, 53%, 80%, 100% { -webkit-text-stroke: 2px var(--neon); filter: drop-shadow(0 0 10px var(--neon)); } 13%, 51% { -webkit-text-stroke: 2px rgba(0, 255, 255, 0.1); filter: none; } }
+        @keyframes scan-move {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
 
-        .cyber-card { background: var(--bg-card); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; z-index: 1; }
-        .cyber-card::before { content: ""; position: absolute; z-index: -2; left: -50%; top: -50%; width: 200%; height: 200%; background-repeat: no-repeat; background-size: 50% 50%; background-image: linear-gradient(var(--neon), var(--neon)); animation: rotateBorder 4s linear infinite; opacity: 0; transition: opacity 0.3s ease; }
-        .cyber-card::after { content: ""; position: absolute; z-index: -1; left: 2px; top: 2px; width: calc(100% - 4px); height: calc(100% - 4px); background: var(--bg-card); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 19px), calc(100% - 19px) 100%, 0 100%); }
-        @keyframes rotateBorder { 100% { transform: rotate(1turn); } }
-        .cyber-card:hover { transform: translateY(-8px); box-shadow: 0 10px 30px -10px rgba(0, 255, 255, 0.3); }
-        .cyber-card:hover::before { opacity: 1; animation: rotateBorder 1.5s linear infinite; }
-        
-        .btn-cyber { clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); background: var(--neon); color: var(--bg-body); font-weight: 900; transition: all 0.3s; position: relative; }
-        .btn-cyber:hover { background: #fff; box-shadow: var(--neon-glow); animation: button-pulse 1s infinite alternate; }
+        /* --- CARDS E BOTÕES --- */
+        .cyber-card { 
+            background: rgba(10, 10, 10, 0.98); 
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%); 
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative; border: 1px solid var(--border);
+        }
+        .cyber-card:hover { border-color: var(--neon); box-shadow: 0 0 40px rgba(0, 255, 255, 0.2); transform: translateY(-10px); }
 
-        @keyframes button-pulse { from { box-shadow: 0 0 5px var(--neon); } to { box-shadow: 0 0 20px var(--neon); } }
-        #theme-toggle { position: fixed; bottom: 30px; right: 30px; z-index: 100; width: 55px; height: 55px; background: var(--bg-card); border: 1px solid var(--neon); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--neon-glow); transition: all 0.3s; clip-path: polygon(20% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%, 0% 20%); }
-        .glitch-anim { position: relative; animation: glitch 1s linear infinite; }
-        @keyframes glitch { 2%, 64% { transform: translate(2px, 0) skew(0deg); } 4%, 60% { transform: translate(-2px, 0) skew(0deg); } 62% { transform: translate(0, 0) skew(5deg); } }
-        .text-neon { color: var(--neon); text-shadow: var(--neon-glow); }
-        #cart-sidebar { background: var(--sidebar-bg); backdrop-filter: blur(20px); border-left: 1px solid var(--neon); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-cyber { 
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); 
+            background: var(--neon); color: #000; font-weight: 900; 
+            transition: all 0.3s; font-family: 'Orbitron';
+        }
+        .btn-cyber:hover { background: #fff; box-shadow: 0 0 30px var(--neon); transform: scale(1.05); }
     </style>
 </head>
 <body class="loading overflow-hidden">
 
     <div id="preloader">
-        <div class="loader-content">
-            <div class="hex-loader">
-                <div class="hex-inner glitch-anim">I</div>
+        <canvas id="preloader-canvas"></canvas>
+        <div class="flex flex-col items-center">
+            <div class="cyber-loader">
+                <div class="loader-ring"></div>
+                <span class="font-titan text-neon text-4xl animate-pulse">ID</span>
             </div>
-            <div id="system-status" class="system-log">Initiating Protocols...</div>
-            <div class="progress-bar-wrap">
-                <div id="progress-fill" class="progress-bar-fill"></div>
-            </div>
-            <div class="font-titan text-[var(--neon)] mt-4 text-[10px] tracking-[0.5em]">
-                SYNC: <span id="load-percent">0%</span>
+            <div id="loader-status" class="loader-logs">Decriptando Dados...</div>
+            <div class="w-48 h-[2px] bg-zinc-900 mt-4 relative overflow-hidden">
+                <div id="progress-bar" class="absolute inset-0 bg-neon w-0 transition-all duration-500"></div>
             </div>
         </div>
     </div>
 
-    <div id="theme-toggle">
-        <div id="theme-icon-container" class="text-neon">
-            <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line></svg>
-            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-        </div>
-    </div>
-
-    <nav class="flex justify-between items-center p-8 max-w-7xl mx-auto relative z-20">
+    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto relative z-50">
         <div class="flex items-center gap-4 cursor-pointer">
-            <div class="border-2 border-neon w-10 h-10 flex items-center justify-center font-titan text-2xl text-neon shadow-neon">I</div>
-            <span class="text-2xl font-titan uppercase tracking-tighter">INFO<span class="text-neon">DUDU</span></span>
+            <div class="w-12 h-12 border-2 border-neon flex items-center justify-center font-black text-neon shadow-[0_0_15px_#0ff]">D</div>
+            <h1 class="text-2xl font-titan uppercase tracking-tighter">INFO<span class="text-neon">DUDU</span></h1>
         </div>
-        <button id="open-cart-btn" class="relative p-4 bg-[var(--bg-card)] border border-[var(--border)] hover:border-neon transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            <span id="cart-badge" class="absolute -top-2 -right-2 bg-neon text-black text-[10px] font-black w-6 h-6 flex items-center justify-center font-titan">0</span>
+        <button id="open-cart-btn" class="relative p-4 border border-neon/30 bg-black">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0ff" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span id="cart-badge" class="absolute -top-2 -right-2 bg-[#f0f] text-white text-[10px] w-6 h-6 flex items-center justify-center rounded-full font-bold">0</span>
         </button>
     </nav>
 
-    <header class="py-12 px-8 max-w-7xl mx-auto relative">
-        <div class="neon-title-wrapper" data-aos="fade-right">
-            <span class="neon-text mundo">DIGITAL</span>
-            <span class="neon-text digital">WORLD</span>
+    <header class="py-20 px-6 max-w-7xl mx-auto relative">
+        <div class="glitch-wrapper" data-aos="fade-right">
+            <div class="scan-line"></div>
+            
+            <h2 class="text-7xl md:text-9xl font-black cyber-scan-title" data-text="DIGITAL">
+                DIGITAL
+            </h2>
+            <h2 class="text-6xl md:text-8xl font-black cyber-scan-title" data-text="WORLD" style="opacity: 0.8;">
+                WORLD
+            </h2>
         </div>
     </header>
 
@@ -169,47 +210,47 @@
         <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"></div>
     </section>
 
-    <div id="product-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 invisible opacity-0 transition-all duration-300">
-        <div id="modal-overlay" class="absolute inset-0 bg-black/90 backdrop-blur-sm"></div>
-        <div id="modal-content" class="relative bg-[var(--bg-modal)] w-full max-w-4xl border border-cyan-500/30 overflow-hidden flex flex-col md:flex-row scale-90" style="clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%);">
-            <button id="close-modal-btn" class="absolute top-6 right-6 z-10 text-neon hover:rotate-180 transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-            <div class="w-full md:w-1/2 bg-black/20 flex items-center justify-center p-12 border-r border-zinc-900/10"><div id="modal-icon" class="text-neon opacity-40"></div></div>
-            <div class="w-full md:w-1/2 p-10 flex flex-col justify-center">
-                <span class="text-neon font-bold text-[10px] tracking-[0.5em] uppercase mb-4 italic">Upgrade Available</span>
-                <h2 id="modal-title" class="text-4xl md:text-5xl font-titan uppercase mb-6 leading-none text-[var(--text-main)]">---</h2>
-                <p id="modal-desc" class="text-[var(--text-sec)] text-sm leading-relaxed mb-8 border-l-2 border-cyan-500/20 pl-4">---</p>
-                <div class="flex items-center justify-between mt-4"><span id="modal-price" class="text-3xl font-titan text-[var(--text-main)]">R$ 0</span><button id="add-btn-modal" class="btn-cyber px-8 py-4 uppercase text-[10px] tracking-widest">Acquire</button></div>
+    <div id="product-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 invisible opacity-0 transition-all duration-300">
+        <div id="modal-overlay" class="absolute inset-0 bg-black/95 backdrop-blur-sm"></div>
+        <div id="modal-content" class="relative bg-zinc-950 w-full max-w-lg border border-neon p-10 flex flex-col items-center">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-neon font-titan">X</button>
+            <div id="modal-icon" class="text-neon mb-6 opacity-30"></div>
+            <h2 id="modal-title" class="text-4xl font-titan uppercase mb-2 text-center">---</h2>
+            <p id="modal-desc" class="text-zinc-500 text-sm text-center mb-8">---</p>
+            <div class="flex items-center justify-between w-full">
+                <span id="modal-price" class="text-3xl font-titan text-white">R$ 0</span>
+                <button id="add-btn-modal" class="btn-cyber px-8 py-3 uppercase text-[10px]">Acquire</button>
             </div>
         </div>
     </div>
 
-    <div id="cart-overlay" class="fixed inset-0 bg-black/80 z-40 hidden backdrop-blur-md"></div>
-    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full sm:w-[450px] z-50 translate-x-full p-8 flex flex-col shadow-2xl">
-        <div class="flex justify-between items-center mb-10"><h2 class="text-2xl font-titan uppercase italic text-neon">Data Storage</h2><button id="close-cart-btn" class="text-[var(--text-sec)] hover:text-[var(--text-main)] transition"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div>
+    <div id="cart-overlay" class="fixed inset-0 bg-black/80 z-[80] hidden backdrop-blur-md"></div>
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full sm:w-[380px] z-[90] bg-black border-l border-neon translate-x-full transition-transform duration-500 p-8 flex flex-col">
+        <h2 class="text-2xl font-titan text-neon mb-10 italic uppercase tracking-widest">Storage_Data</h2>
         <div id="cart-items" class="flex-1 overflow-y-auto space-y-4"></div>
-        <div class="border-t border-zinc-800 pt-8 mt-6">
-            <div class="flex justify-between mb-6"><span class="uppercase tracking-[0.3em] text-[10px] text-[var(--text-sec)]">Total Credits</span><span id="total-price" class="font-titan text-2xl text-neon">R$ 0,00</span></div>
-            <button id="checkout-btn" class="w-full btn-cyber py-5 uppercase text-xs tracking-[0.2em]">Execute Protocol</button>
+        <div class="border-t border-neon/30 pt-8 mt-6">
+            <div class="flex justify-between mb-6"><span class="text-zinc-500 text-xs uppercase font-mono">Total_Credits</span><span id="total-price" class="font-titan text-2xl text-neon">R$ 0,00</span></div>
+            <button id="checkout-btn" class="w-full btn-cyber py-5 uppercase text-xs">Execute Order</button>
+            <button id="close-cart-btn" class="w-full mt-4 text-center text-zinc-600 text-[10px] uppercase font-mono">[ Fechar Terminal ]</button>
         </div>
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="module">
-        const meuNumero = "5599999999999"; // COLOQUE SEU NÚMERO AQUI
+        const meuNumero = "5599999999999"; 
         let cartItems = [];
         let total = 0;
 
         const produtosLocais = [
-            { nome: "Redmi A5", preco: 99.90, categoria: "Mobile / Entry", tipo: "smartphone", descricao: "Efficiency and minimalist design. The perfect entry point into the digital ecosystem." },
-            { nome: "Redmi Note 12", preco: 99.90, categoria: "Mobile / Mid-Range", tipo: "smartphone", descricao: "AMOLED display and optimized performance for intense multitasking in cyberspace." },
-            { nome: "Tablet Philco 10\"", preco: 99.90, categoria: "Display / Portable", tipo: "monitor", descricao: "Maximum portability for data visualization and high-definition media consumption." },
-            { nome: "Inova FON-13025", preco: 29.90, categoria: "Audio / Wireless", tipo: "headset", descricao: "Stable connection and acoustic isolation for sound immersion without interference." },
-            { nome: "Kapbom KA-877", preco: 34.90, categoria: "Accessories / Input", tipo: "headset", descricao: "High tactile response peripheral, designed for durability in prolonged sessions." },
-            { nome: "Fones TWS Gamer", preco: 79.90, categoria: "Audio / Gaming", tipo: "headset", descricao: "Zero latency and LED lighting. Perfect sync for competitive gaming sessions." },
-            { nome: "X-Cell XC-USB-10", preco: 24.90, categoria: "Energy / Supply", tipo: "cpu", descricao: "Ultra-fast energy transfer with protection against data overload during charge." },
-            { nome: "Generic SmartWatch", preco: 89.90, categoria: "Wearable / Sync", tipo: "smartphone", descricao: "Real-time biometric monitoring and total integration with your mobile protocols." }
+            { id: 1, nome: "REDMI NOTE 13", preco: 1450.00, categoria: "Mobile Pro", tipo: "smartphone", descricao: "Protocolo de comunicação avançado." },
+            { id: 2, nome: "Fone TWS Cyber", preco: 89.90, categoria: "Audio Link", tipo: "headset", descricao: "Sincronização neural estável." },
+            { id: 3, nome: "Tablet Ultra 10", preco: 980.00, categoria: "Display Unit", tipo: "monitor", descricao: "Visualização de dados de alta densidade." },
+            { id: 4, nome: "Inova Audio X", preco: 49.90, categoria: "Acoustic Unit", tipo: "headset", descricao: "Isolamento acústico ativo." },
+            { id: 5, nome: "Cabo Turbo 120W", preco: 45.00, categoria: "Energy Supply", tipo: "cpu", descricao: "Transferência de energia ultra-rápida." },
+            { id: 6, nome: "Mouse Cyber-G", preco: 120.00, categoria: "Input Unit", tipo: "cpu", descricao: "Rastreamento tátil de alta precisão." }
         ];
 
+        // --- LÓGICA DO SITE ---
         const salvarCarrinho = () => localStorage.setItem('infodudu_cart', JSON.stringify(cartItems));
         const recuperarCarrinho = () => {
             const salvo = localStorage.getItem('infodudu_cart');
@@ -220,33 +261,15 @@
             }
         };
 
-        function applyTheme(theme) {
-            const sunIcon = document.getElementById('sun-icon');
-            const moonIcon = document.getElementById('moon-icon');
-            if (theme === 'light') {
-                document.body.classList.add('light-mode');
-                sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden');
-            } else {
-                document.body.classList.remove('light-mode');
-                sunIcon.classList.add('hidden'); moonIcon.classList.remove('hidden');
-            }
-        }
-
-        document.getElementById('theme-toggle').onclick = () => {
-            const theme = document.body.classList.contains('light-mode') ? 'dark' : 'light';
-            localStorage.setItem('theme-pref', theme); applyTheme(theme);
-        };
-        applyTheme(localStorage.getItem('theme-pref') || 'dark');
-
         function getIcon(type) {
-            const size = 120, stroke = 0.5;
+            const size = 120, stroke = 1;
             const icons = {
-                monitor: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${stroke}"><rect x="2" y="3" width="20" height="14" rx="1" ry="1"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`,
-                smartphone: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${stroke}"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12" y2="18"></line></svg>`,
+                monitor: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${stroke}"><rect x="2" y="3" width="20" height="14" rx="1"></rect><path d="M8 21h8M12 17v4"></path></svg>`,
+                smartphone: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${stroke}"><rect x="5" y="2" width="14" height="20" rx="2"></rect><circle cx="12" cy="18" r="1"></circle></svg>`,
                 headset: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${stroke}"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>`,
-                cpu: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${stroke}"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2m-6-2v2m11 5h2M20 15h2M2 9h2m-2 6h2m7 7v-2m6 2v-2"/></svg>`
+                cpu: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${stroke}"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2M9 2v2M20 9h2M20 15h2M2 9h2M2 15h2M9 20v2M15 20v2"/></svg>`
             };
-            return icons[type] || `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${stroke}"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"/></svg>`;
+            return icons[type] || ``;
         }
 
         async function carregarProdutos() {
@@ -254,14 +277,15 @@
             grid.innerHTML = ''; 
             produtosLocais.forEach((p) => {
                 grid.innerHTML += `
-                    <div onclick="window.openProduct('${p.nome}', ${p.preco}, '${p.descricao}', '${p.tipo}')" data-aos="fade-up" class="cyber-card p-10 h-[450px] flex flex-col justify-between group cursor-pointer">
-                        <div class="flex justify-center items-center h-full text-[var(--text-sec)] opacity-20 group-hover:text-neon group-hover:opacity-100 transition-all duration-700">${getIcon(p.tipo)}</div>
-                        <div class="relative z-10">
-                            <p class="text-neon text-[9px] tracking-[0.5em] uppercase mb-2 font-bold opacity-0 group-hover:opacity-100 transition-all">Link Synced</p>
-                            <h2 class="text-3xl font-titan uppercase text-[var(--text-main)] leading-none group-hover:text-neon transition-colors">${p.nome}</h2>
-                            <div class="flex justify-between items-center mt-6 pt-6 border-t border-[var(--border)]">
-                                <p class="text-[var(--text-sec)] text-[10px] tracking-widest uppercase italic">${p.categoria}</p>
-                                <p class="font-titan text-xl text-[var(--text-main)]">R$ ${p.preco.toFixed(2).replace('.', ',')}</p>
+                    <div onclick="window.openProduct('${p.nome}', ${p.preco}, '${p.descricao}', '${p.tipo}')" data-aos="zoom-in-up" class="cyber-card p-10 min-h-[350px] flex flex-col justify-between group cursor-pointer">
+                        <div class="absolute top-4 right-4 text-[10px] text-neon/30 font-mono">#000${p.id}</div>
+                        <div class="flex justify-center items-center h-28 text-neon opacity-30 group-hover:opacity-100 transition duration-700">${getIcon(p.tipo)}</div>
+                        <div>
+                            <span class="text-[10px] text-neon uppercase tracking-widest font-bold font-mono">Protocol_Sync</span>
+                            <h2 class="text-3xl font-titan uppercase text-white leading-tight mt-1 group-hover:text-neon transition">${p.nome}</h2>
+                            <div class="flex justify-between items-end mt-6 pt-4 border-t border-neon/10">
+                                <p class="text-zinc-500 text-[10px] uppercase font-mono">${p.categoria}</p>
+                                <p class="font-titan text-xl text-white">R$ ${p.preco.toFixed(2).replace('.', ',')}</p>
                             </div>
                         </div>
                     </div>
@@ -271,89 +295,102 @@
         }
 
         window.openProduct = (name, price, desc, type) => {
-            const modalTitle = document.getElementById('modal-title');
-            modalTitle.innerText = name;
-            modalTitle.classList.add('glitch-anim');
-            setTimeout(() => modalTitle.classList.remove('glitch-anim'), 1000);
+            document.getElementById('modal-title').innerText = name;
             document.getElementById('modal-price').innerText = `R$ ${price.toFixed(2).replace('.', ',')}`;
             document.getElementById('modal-desc').innerText = desc;
-            document.getElementById('modal-icon').innerHTML = getIcon(type).replace('120', '250').replace('stroke-width="0.5"', 'stroke-width="0.1"');
+            document.getElementById('modal-icon').innerHTML = getIcon(type).replace('size = 120', 'size = 180');
             document.getElementById('add-btn-modal').onclick = () => addToCart(name, price);
             const m = document.getElementById('product-modal');
             m.classList.remove('invisible'); m.classList.add('opacity-100');
-            document.getElementById('modal-content').classList.remove('scale-90');
-            document.body.style.overflow = 'hidden';
         };
 
         const closeModal = () => {
             document.getElementById('product-modal').classList.add('opacity-0');
-            document.getElementById('modal-content').classList.add('scale-90');
-            setTimeout(() => { document.getElementById('product-modal').classList.add('invisible'); document.body.style.overflow = 'auto'; }, 300);
+            setTimeout(() => document.getElementById('product-modal').classList.add('invisible'), 300);
         };
 
         const addToCart = (name, price) => {
-            cartItems.push({name, price}); 
-            total += price;
-            salvarCarrinho();
-            updateCartUI(); 
-            closeModal();
+            cartItems.push({name, price}); total += price;
+            salvarCarrinho(); updateCartUI(); closeModal();
             document.getElementById('cart-sidebar').style.transform = 'translateX(0)';
             document.getElementById('cart-overlay').classList.remove('hidden');
         };
 
         const updateCartUI = () => {
             const list = document.getElementById('cart-items');
-            list.innerHTML = cartItems.length === 0 ? '<p class="text-center mt-20 text-[var(--text-sec)] uppercase tracking-[0.5em] text-[10px]">No Data Found</p>' : 
-                cartItems.map(item => `<div class="flex justify-between items-center p-6 bg-black/5 border border-[var(--border)] cart-item-anim"><span class="font-titan text-xs uppercase text-[var(--text-main)]">${item.name}</span><span class="text-neon font-titan text-sm">R$ ${item.price.toFixed(2).replace('.', ',')}</span></div>`).join('');
+            list.innerHTML = cartItems.length === 0 ? '<p class="text-center text-zinc-700 uppercase text-[10px] mt-20 font-mono">[ Sem Dados ]</p>' : 
+                cartItems.map(item => `<div class="flex justify-between p-4 border border-neon/10 bg-white/5 animate-pulse"><span class="font-titan text-[10px] uppercase">${item.name}</span><span class="text-neon text-[10px]">R$ ${item.price.toFixed(2)}</span></div>`).join('');
             document.getElementById('cart-badge').innerText = cartItems.length;
             document.getElementById('total-price').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
         };
 
         document.getElementById('close-modal-btn').onclick = closeModal;
-        document.getElementById('modal-overlay').onclick = closeModal;
         document.getElementById('open-cart-btn').onclick = () => { document.getElementById('cart-sidebar').style.transform = 'translateX(0)'; document.getElementById('cart-overlay').classList.remove('hidden'); };
         document.getElementById('close-cart-btn').onclick = () => { document.getElementById('cart-sidebar').style.transform = 'translateX(100%)'; document.getElementById('cart-overlay').classList.add('hidden'); };
         
         document.getElementById('checkout-btn').onclick = () => {
             if(!cartItems.length) return;
-            let msg = encodeURIComponent(`⚡ *ACQUISITION PROTOCOL - INFO DUDU*\n\n*Items:*\n${cartItems.map(i => `> ${i.name}`).join('\n')}\n\n*TOTAL VALUE:* R$ ${total.toFixed(2).replace('.', ',')}`);
-            window.open(`https://wa.me/${meuNumero}?text=${msg}`, '_blank');
+            const text = encodeURIComponent(`⚡ *PEDIDO INFO DUDU*\n\n${cartItems.map(i => `> ${i.name}`).join('\n')}\n\n*TOTAL:* R$ ${total.toFixed(2)}`);
+            window.open(`https://wa.me/${meuNumero}?text=${text}`);
         };
 
-        window.addEventListener('load', async () => {
-            const preloader = document.getElementById('preloader');
-            const progressFill = document.getElementById('progress-fill');
-            const percentText = document.getElementById('load-percent');
-            const statusText = document.getElementById('system-status');
-            
-            const logs = ["Searching Servers...", "Injecting Scripts...", "Syncing Database...", "Clearing Cache...", "Access Granted!"];
-
-            let progress = 0;
-            const progressInterval = setInterval(() => {
-                progress += Math.random() * 12;
-                if(progress > 100) progress = 100;
-                const finalVal = Math.round(progress);
-                progressFill.style.width = finalVal + '%';
-                percentText.innerText = finalVal + '%';
-                if (finalVal < 25) statusText.innerText = logs[0];
-                else if (finalVal < 50) statusText.innerText = logs[1];
-                else if (finalVal < 75) statusText.innerText = logs[2];
-                else if (finalVal < 90) statusText.innerText = logs[3];
-                else statusText.innerText = logs[4];
-                if(finalVal === 100) clearInterval(progressInterval);
-            }, 100);
-
-            await carregarProdutos();
+        // --- PRELOADER MATRIX ---
+        window.onload = () => {
+            carregarProdutos();
             recuperarCarrinho();
 
+            const canvas = document.getElementById('preloader-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const chars = "0101010101ABCDEF";
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = Array(Math.floor(columns)).fill(1);
+
+            function drawMatrix() {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#0ff";
+                ctx.font = fontSize + "px monospace";
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }
+            const matrixInterval = setInterval(drawMatrix, 50);
+
+            const logs = ["Decriptando Kernel...", "Injetando Scripts...", "Sincronizando Firebase...", "Buscando Produtos...", "Acesso Concedido!"];
+            let logIndex = 0;
+            const statusEl = document.getElementById('loader-status');
+            const progressEl = document.getElementById('progress-bar');
+
+            const logTimer = setInterval(() => {
+                if (logIndex < logs.length) {
+                    statusEl.innerText = logs[logIndex];
+                    progressEl.style.width = ((logIndex + 1) / logs.length * 100) + "%";
+                    logIndex++;
+                }
+            }, 500);
+
             setTimeout(() => {
-                preloader.style.transform = "scale(1.2)";
-                preloader.style.opacity = '0';
-                document.body.classList.remove('overflow-hidden');
-                AOS.init({ duration: 1200, once: true });
-                setTimeout(() => preloader.style.display = 'none', 1000);
-            }, 2500); 
-        });
+                clearInterval(matrixInterval);
+                clearInterval(logTimer);
+                const preloader = document.getElementById('preloader');
+                preloader.style.transition = "all 0.8s cubic-bezier(0.9, 0, 0.1, 1)";
+                preloader.style.opacity = "0";
+                preloader.style.transform = "translateY(-100%)";
+                
+                setTimeout(() => {
+                    preloader.style.display = "none";
+                    document.body.classList.remove('overflow-hidden');
+                    AOS.init({ duration: 1000, once: true });
+                }, 800);
+            }, 3000);
+        };
     </script>
 </body>
 </html>
